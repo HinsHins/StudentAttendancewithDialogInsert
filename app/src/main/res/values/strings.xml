@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FireStoreInsetPrototype</string>
+    <string name="home">Home</string>
+    <string name="Programme">Programme</string>
+    <string name="generate">Generate</string>
+    <string name="setting">Setting</string>
+    <string name="search">Search</string>
+    <string name="student">Student</string>
+    <string name="lecturer">Lecturer</string>
+    <string name="module">Module</string>
+</resources>

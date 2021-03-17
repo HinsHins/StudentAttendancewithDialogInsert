@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:cardElevation="3dp"-->
+<!--        app:cardPreventCornerOverlap="false"-->
+<!--        app:cardUseCompatPadding="true"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="50dp"
+                    android:padding="10dp"
+                    android:background="@drawable/circle"
+                    android:src="@drawable/ic_register"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="REGISTER"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayout"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_userIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_user"
+                        app:tint="@color/white" />
+
+                    <EditText
+                        android:id="@+id/email_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/editTextBG"
+                        android:paddingStart="15dp"
+                        android:hint="Email "
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayout"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_passwordIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_password"
+                        app:tint="@color/white" />
+
+                    <EditText
+                        android:id="@+id/password_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/editTextBG"
+                        android:inputType="textPassword"
+                        android:paddingStart="15dp"
+                        android:hint="Password "
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayout"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_confirmPasswordIcon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@color/colorPrimary"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_password"
+                        app:tint="@color/white" />
+
+                    <EditText
+                        android:id="@+id/confirmPassword_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/editTextBG"
+                        android:inputType="textPassword"
+                        android:paddingStart="15dp"
+                        android:hint="Confirm Password "
+                        />
+                </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="30dp"
+                   android:orientation="horizontal"
+                   >
+                   <RadioGroup
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_marginLeft="30dp"
+                       android:orientation="horizontal">
+                       <RadioButton
+                           android:id="@+id/admin_Radio"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:text="Administrator"
+                           android:onClick="onRadioButtonClicked"
+                           />
+
+                       <RadioButton
+                           android:id="@+id/lecturer_Radio"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="30dp"
+                           android:text="Lecturer"
+                           android:onClick="onRadioButtonClicked"/>
+                   </RadioGroup>
+               </LinearLayout>
+
+                <Button
+                    android:id="@+id/register_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="REGISTER"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    </androidx.cardview.widget.CardView>-->
+
+    <!--    <EditText-->
+<!--        android:id="@+id/register_email_ed"-->
+<!--        android:hint="Email address"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/register_password_ed"-->
+<!--        android:hint="password"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/register_email_ed"/>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/register_confirm_password_ed"-->
+<!--        android:hint="Confirm password"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/register_password_ed"/>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/submit_button"-->
+<!--        android:text="Submit"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/register_confirm_password_ed"/>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
