@@ -4,16 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <EditText
         android:id="@+id/studentId_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:hint="Student ID"/>
 
     <EditText
         android:id="@+id/studentName_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:hint="Student Name"/>
 
     <Spinner
@@ -21,6 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         />
 
 </LinearLayout>

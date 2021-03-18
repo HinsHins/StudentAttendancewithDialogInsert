@@ -136,6 +136,7 @@ class ProfileActivity : AppCompatActivity() {
                 return@filter it.date?.toDate()?.toDateOnly() == today
             } as ArrayList<Timetable>
 
+            timetableDocMapper.timetables.sortBy { it.time }
             //number of lesson
             number_of_lesson_tv.text =  timetableDocMapper.timetables.size.toString()
 

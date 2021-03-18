@@ -51,9 +51,9 @@ class LoginActivity : AppCompatActivity() {
 
         hideProgressBar()
 
-        tv_forgotPwd.setOnClickListener{ view ->
-            showRecoveryAlert()
-        }
+//        tv_forgotPwd.setOnClickListener{ view ->
+//            showRecoveryAlert()
+//        }
 
         retrieveUsers()
 

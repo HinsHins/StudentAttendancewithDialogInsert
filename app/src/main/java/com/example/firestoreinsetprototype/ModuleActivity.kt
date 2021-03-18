@@ -24,6 +24,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.synthetic.main.activity_module.*
+import kotlinx.android.synthetic.main.module_dialog_layout.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -79,102 +80,36 @@ class ModuleActivity : AppCompatActivity() {
             }
 
         module_insert.setOnClickListener {
-            var id = module_id_et.text.toString().trim()
-            var name = module_name_et.text.toString().trim()
-            var numOfWeek = number_of_week_et.text.toString().toInt()
-            fdate = Date(DateUtil.toYearFrom(datePickerYear = fyear),fmonth,fday)
-            ftime= Date(0,0,0,fhour,fminute)
-          //  var year = module_year_et.text.toString().trim()
-           // var level = module_level_et.text.toString().trim()
-           // var credit = module_credit_et.text.toString().trim()
-            var lecturer = selectedLecturer
-            var programme = selectedProgramme
-
-            //if (id != "" && name != "" && year != "" && level != "" && credit != "" && lecturer != null) {
-            if (id != "" && name != "" && lecturer != null && programme != null) {
-                //var module = Module(id.toInt(),name, year.toInt(), level.toInt(), credit.toInt(),lecturer)
-                var module =
-                    Module(
-                        id, name, Timestamp(fdate), lecturer.id.toString(), lecturer.name,
-                        programme.id.toString(), programme.name, numOfWeek, Timestamp(ftime)
-                    )
-
-
-                Log.d("Module", "$module")
-                hideKeyboard()
-                clearInput()
-                writeModule(module)
-            } else
-                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
+            moduleInputDialog(it)
+//            var id = module_id_et.text.toString().trim()
+//            var name = module_name_et.text.toString().trim()
+//            var numOfWeek = number_of_week_et.text.toString().toInt()
+//            fdate = Date(DateUtil.toYearFrom(datePickerYear = fyear),fmonth,fday)
+//            ftime= Date(0,0,0,fhour,fminute)
+//          //  var year = module_year_et.text.toString().trim()
+//           // var level = module_level_et.text.toString().trim()
+//           // var credit = module_credit_et.text.toString().trim()
+//            var lecturer = selectedLecturer
+//            var programme = selectedProgramme
+//
+//            //if (id != "" && name != "" && year != "" && level != "" && credit != "" && lecturer != null) {
+//            if (id != "" && name != "" && lecturer != null && programme != null) {
+//                //var module = Module(id.toInt(),name, year.toInt(), level.toInt(), credit.toInt(),lecturer)
+//                var module =
+//                    Module(
+//                        id, name, Timestamp(fdate), lecturer.id.toString(), lecturer.name,
+//                        programme.id.toString(), programme.name, numOfWeek, Timestamp(ftime)
+//                    )
+//
+//
+//                Log.d("Module", "$module")
+//                hideKeyboard()
+////                clearInput()
+//                writeModule(module)
+//            } else
+//                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
         }
-
         retrieveModules()
-        retrieveLecturers()
-        retrieveProgrammes()
-
-        class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
-
-            override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-                // Use the current date as the default date in the picker
-                val c = Calendar.getInstance()
-                val year = c.get(Calendar.YEAR)
-                val month = c.get(Calendar.MONTH)
-                val day = c.get(Calendar.DAY_OF_MONTH)
-
-
-                // Create a new instance of DatePickerDialog and return it
-                return DatePickerDialog(this@ModuleActivity, this, year, month, day)
-            }
-
-            override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-                // Do something with the date chosen by the user
-                fyear = year
-                fmonth = month
-                fday = day
-                Log.d("Year", "$fyear")
-                Log.d("Month", "$fmonth")
-                Log.d("Day", "$fday")
-                var selectedDate = findViewById<TextView>(R.id.selectedDate_tv)
-                val date = Date(DateUtil.toYearFrom(datePickerYear = fyear),fmonth,fday)
-//                selectedDate.text = fday.toString() + "-" + (fmonth+1).toString() + "-" + fyear.toString()
-                selectedDate.text = date.dateFormat()
-            }
-        }
-
-        class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
-
-            override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-                // Use the current time as the default values for the picker
-                val c = Calendar.getInstance()
-                val hour = c.get(Calendar.HOUR_OF_DAY)
-                val minute = c.get(Calendar.MINUTE)
-
-                // Create a new instance of TimePickerDialog and return it
-                return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
-            }
-
-            override fun onTimeSet(view: TimePicker, hour: Int, minute: Int) {
-                // Do something with the time chosen by the user
-                fhour = hour
-                fminute = minute
-                Log.d("Hour", "$fhour")
-                Log.d("Minute", "$fminute")
-                val timeDate = Date(0,0,0,fhour,fminute)
-                var selectedTime = findViewById<TextView>(R.id.selectedTime_tv)
-
-                selectedTime.text = timeDate.timeFormat()
-            }
-        }
-
-        startDate_button.setOnClickListener {
-            DatePickerFragment()
-                .show(supportFragmentManager, "datePicker")
-        }
-
-        startTime_button.setOnClickListener{
-            TimePickerFragment()
-                .show(supportFragmentManager, "timePicker")
-        }
 
     }
 
@@ -192,26 +127,24 @@ class ModuleActivity : AppCompatActivity() {
     }
 
 
-    private fun retrieveLecturers() {
+    private fun retrieveLecturers(spinner: Spinner) {
         val lecturersCollection = fb.collection(lecturersPath)
         lecturersCollection.retrieveData(lecturers as ArrayList<Model>, Lecturer::class.java) {
             var lecturers = lecturers as ArrayList<Lecturer>
             val lecturersString = lecturers.map { it.name } as ArrayList<String>
-            val lectureSpinner: Spinner = findViewById(R.id.lecturerSpinner)
-            val lecturerAdapter =  SpinnerUtil.setupSpinner(this,lectureSpinner,lecturersString){
+            val lecturerAdapter =  SpinnerUtil.setupSpinner(this,spinner,lecturersString){
                 selectedLecturer = lecturers[it]
             }
             lecturerAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun retrieveProgrammes() {
+    private fun retrieveProgrammes(spinner: Spinner) {
         val programmesCollection = fb.collection(programmesPath)
         programmesCollection.retrieveData(programmes as ArrayList<Model>, Programme::class.java) {
             var programmes = programmes as ArrayList<Programme>
             val programmesString = programmes.map { it.name } as ArrayList<String>
-            val programmeSpinner: Spinner = findViewById(R.id.programmeSpinner)
-            val programmeAdapter = SpinnerUtil.setupSpinner(this,programmeSpinner,programmesString) {
+            val programmeAdapter = SpinnerUtil.setupSpinner(this,spinner,programmesString) {
                 selectedProgramme = programmes[it]
             }
             programmeAdapter.notifyDataSetChanged()
@@ -246,17 +179,17 @@ class ModuleActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        clearInput()
+//        clearInput()
         moduleAdapter.clear()
     }
 
-    private fun clearInput() {
-        module_id_et.text.clear()
-        module_name_et.text.clear()
-        //module_year_et.text.clear()
-        //module_level_et.text.clear()
-        //module_credit_et.text.clear()
-    }
+//    private fun clearInput() {
+//        module_id_et.text.clear()
+//        module_name_et.text.clear()
+//        module_year_et.text.clear()
+//        module_level_et.text.clear()
+//        module_credit_et.text.clear()
+//    }
 
     private fun presentDeleteAlert(module: Module) {
         val dialog =  AlertDialog.Builder(this)
@@ -337,5 +270,123 @@ class ModuleActivity : AppCompatActivity() {
         }
     }
 
+    fun moduleInputDialog(view: View) {
+        val builder = android.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle("Create New Programme")
+        val dialogLayout = inflater.inflate(R.layout.module_dialog_layout, null)
+        val module_id_et  = dialogLayout.findViewById<EditText>(R.id.module_id_et)
+        val module_name_et  = dialogLayout.findViewById<EditText>(R.id.module_name_et)
+        val number_of_week = dialogLayout.findViewById<EditText>(R.id.number_of_week_et)
+        val programmeSpinner = dialogLayout.findViewById<Spinner>(R.id.programmeSpinner)
+        val lecturerSpinner = dialogLayout.findViewById<Spinner>(R.id.lecturerSpinner)
+        val start_time_button = dialogLayout.findViewById<Button>(R.id.startTime_button)
+        val start_date_button = dialogLayout.findViewById<Button>(R.id.startDate_button)
+        val date = fdate
+        val time = ftime
+        retrieveLecturers(lecturerSpinner)
+        retrieveProgrammes(programmeSpinner)
+        class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
+
+            override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+                // Use the current date as the default date in the picker
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+
+                // Create a new instance of DatePickerDialog and return it
+                return DatePickerDialog(this@ModuleActivity, this, year, month, day)
+            }
+
+            override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+                // Do something with the date chosen by the user
+                fyear = year
+                fmonth = month
+                fday = day
+                Log.d("Year", "$fyear")
+                Log.d("Month", "$fmonth")
+                Log.d("Day", "$fday")
+                var selectedDate = dialogLayout.findViewById<TextView>(R.id.selectedDate_tv)
+                val date = Date(DateUtil.toYearFrom(datePickerYear = fyear),fmonth,fday)
+//                selectedDate.text = fday.toString() + "-" + (fmonth+1).toString() + "-" + fyear.toString()
+                selectedDate.text = date.dateFormat()
+            }
+        }
+
+        class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+
+            override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+                // Use the current time as the default values for the picker
+                val c = Calendar.getInstance()
+                val hour = c.get(Calendar.HOUR_OF_DAY)
+                val minute = c.get(Calendar.MINUTE)
+
+                // Create a new instance of TimePickerDialog and return it
+                return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
+            }
+
+            override fun onTimeSet(view: TimePicker, hour: Int, minute: Int) {
+                // Do something with the time chosen by the user
+                fhour = hour
+                fminute = minute
+                Log.d("Hour", "$fhour")
+                Log.d("Minute", "$fminute")
+                val timeDate = Date(0,0,0,fhour,fminute)
+                var selectedTime = dialogLayout.findViewById<TextView>(R.id.selectedTime_tv)
+
+                selectedTime.text = timeDate.timeFormat()
+            }
+        }
+
+        start_date_button.setOnClickListener {
+            DatePickerFragment()
+                .show(supportFragmentManager, "datePicker")
+        }
+
+        start_time_button.setOnClickListener{
+            TimePickerFragment()
+                .show(supportFragmentManager, "timePicker")
+        }
+
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Cancel") {dialog, whichButton ->
+            dialog.dismiss()
+            lecturers.clear()
+            programmes.clear()
+        }
+
+        builder.setNegativeButton("Insert") { dialogInterface, i ->
+            var id = module_id_et.text.toString().trim()
+            var name = module_name_et.text.toString().trim()
+            var numOfWeek = number_of_week.text.toString().toInt()
+            fdate = Date(DateUtil.toYearFrom(datePickerYear = fyear),fmonth,fday)
+            ftime= Date(0,0,0,fhour,fminute)
+            //  var year = module_year_et.text.toString().trim()
+            // var level = module_level_et.text.toString().trim()
+            // var credit = module_credit_et.text.toString().trim()
+            var lecturer = selectedLecturer
+            var programme = selectedProgramme
+
+            //if (id != "" && name != "" && year != "" && level != "" && credit != "" && lecturer != null) {
+            if (id != "" && name != "" && lecturer != null && programme != null) {
+                //var module = Module(id.toInt(),name, year.toInt(), level.toInt(), credit.toInt(),lecturer)
+                var module =
+                    Module(
+                        id, name, Timestamp(fdate), lecturer.id.toString(), lecturer.name,
+                        programme.id.toString(), programme.name, numOfWeek, Timestamp(ftime)
+                    )
+
+
+                Log.d("Module", "$module")
+                hideKeyboard()
+//                clearInput()
+                writeModule(module)
+            } else
+                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
+        }
+        builder.show()
+    }
 
 }

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/module_id_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Module ID"/>
+
+        <EditText
+            android:id="@+id/module_name_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Module Name"/>
+
+        <EditText
+            android:id="@+id/number_of_week_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:hint="Number of Week"
+            android:inputType="number"/>
+
+        <Spinner
+            android:id="@+id/programmeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"/>
+
+        <Spinner
+            android:id="@+id/lecturerSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/startDate_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:text="Start Date"
+                />
+            <TextView
+                android:id="@+id/selectedDate_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:gravity="center"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/startTime_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:text="Time"
+                />
+            <TextView
+                android:id="@+id/selectedTime_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.50"
+                android:gravity="center"
+                android:text="" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>

@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.firestoreinsetprototype.Adaptor.LecturerRecyclerViewAdaptor
@@ -24,7 +23,9 @@ import com.example.firestoreinsetprototype.Util.retrieveDataWithMatch
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_lecturer.*
+import kotlinx.android.synthetic.main.lecturer_dialog_layout.*
 import java.io.File
+import java.nio.file.attribute.AclEntry
 
 class LecturerActivity : AppCompatActivity() {
 
@@ -42,6 +43,7 @@ class LecturerActivity : AppCompatActivity() {
     lateinit var lecturerAdapter: LecturerRecyclerViewAdaptor
     companion object val PICK_IMAGE = 1
     private var profileImageURL : Uri? = null
+    var dialogLayout: View? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,39 +68,42 @@ class LecturerActivity : AppCompatActivity() {
             }
 
         lecturer_insert.setOnClickListener {
-            var id = lecturer_id_et.text.toString().trim()
-            var name = lecturer_name_et.text.toString().trim()
-            var position = position_et.text.toString().trim()
-            var department = lecturer_department_et.text.toString().trim()
-            var email = selectedUser?.email
+            lectuerInputDialog(it)
+        }
 
-            if (id != "" && name != "" && email != null && position != "" && department != "") {
-                var lecturer =
-                    Lecturer(
-                        id,
-                        name,
-                        email,
-                        position,
-                        department,
-                        profileImageURL != null
-                    )
-                Log.d("Lecturer", "$lecturer")
-                hideKeyboard()
-                clearInputs()
-               if(!(lecturers.any { email == it.email })) {
-                   writeLecturer(lecturer)
-                   Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT).show()
-               }else {
-                   Toast.makeText(this, "This user is already a lecturer", Toast.LENGTH_SHORT).show()
-               }
-            }else
-                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
-        }
-        btn_upload_image.setOnClickListener {
-            openGallery()
-        }
+//        lecturer_insert.setOnClickListener {
+//            var id = lecturer_id_et.text.toString().trim()
+//            var name = lecturer_name_et.text.toString().trim()
+//            var position = position_et.text.toString().trim()
+//            var department = lecturer_department_et.text.toString().trim()
+//            var email = selectedUser?.email
+//
+//            if (id != "" && name != "" && email != null && position != "" && department != "") {
+//                var lecturer =
+//                    Lecturer(
+//                        id,
+//                        name,
+//                        email,
+//                        position,
+//                        department,
+//                        profileImageURL != null
+//                    )
+//                Log.d("Lecturer", "$lecturer")
+//                hideKeyboard()
+//                clearInputs()
+//               if(!(lecturers.any { email == it.email })) {
+//                   writeLecturer(lecturer)
+//                   Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT).show()
+//               }else {
+//                   Toast.makeText(this, "This user is already a lecturer", Toast.LENGTH_SHORT).show()
+//               }
+//            }else
+//                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
+//        }
+//        btn_upload_image.setOnClickListener {
+//            openGallery()
+//        }
         retrieveLecturers()
-        retrieveUsers()
     }
 
     override fun onStop() {
@@ -190,15 +195,15 @@ class LecturerActivity : AppCompatActivity() {
         }
     }
 
-    private fun retrieveUsers(){
+    private fun retrieveUsers(spinner: Spinner){
         val userCollection = fb.collection(USER_PATH)
         userCollection.retrieveDataWithMatch("role","lecturer",users as ArrayList<Model>, User::class.java) {
             var users = users as ArrayList<User>
             val usersString = (users.map { it.email } as ArrayList<String>)
-            val emailSpinner: Spinner = findViewById(R.id.email_Spinner)
+//            val emailSpinner: Spinner = findViewById(R.id.email_Spinner)
             val userAdapter =  SpinnerUtil.setupSpinner(
                 this,
-                emailSpinner,
+                spinner,
                 usersString
             ){
                 selectedUser = users[it]
@@ -208,17 +213,18 @@ class LecturerActivity : AppCompatActivity() {
     }
 
     private fun clearInputs() {
-        lecturer_id_et.text.clear()
-        lecturer_name_et.text.clear()
-        position_et.text.clear()
-        lecturer_department_et.text.clear()
+//        lecturer_id_et.text.clear()
+//        lecturer_name_et.text.clear()
+//        position_et.text.clear()
+//        lecturer_department_et.text.clear()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             val imageURL = data?.data
-            avatar_image.setImageURI(imageURL)
+            val imageView = dialogLayout?.findViewById<ImageView>(R.id.avatar_image)
+            imageView?.setImageURI(imageURL)
             profileImageURL = imageURL
             Log.d("imageURL", "onActivityResult: $imageURL")
         }
@@ -238,6 +244,61 @@ class LecturerActivity : AppCompatActivity() {
             // ...
             Log.d("uploadImage", "uploadImage: $taskSnapshot")
         }
+    }
+
+    fun lectuerInputDialog(view: View) {
+        val builder = android.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle("Create New Lecturer")
+        dialogLayout = inflater.inflate(R.layout.lecturer_dialog_layout, null)
+        val lecturer_id_et  = dialogLayout?.findViewById<EditText>(R.id.lecturer_id_et)
+        val lecturer_name_et  = dialogLayout?.findViewById<EditText>(R.id.lecturer_name_et)
+        val position_name_et  = dialogLayout?.findViewById<EditText>(R.id.position_et)
+        val department_et  = dialogLayout?.findViewById<EditText>(R.id.lecturer_department_et)
+        val email_Spinner = dialogLayout?.findViewById<Spinner>(R.id.email_Spinner)
+        val image_upload_button = dialogLayout?.findViewById<Button>(R.id.upload_image_button)
+        retrieveUsers(email_Spinner!!)
+
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Cancel") {dialog, whichButton ->
+            dialog.dismiss()
+            users.clear()
+            email_Spinner.adapter = null
+        }
+
+        builder.setNegativeButton("Insert"){ dialogInterface, i ->
+            var id = lecturer_id_et?.text.toString().trim()
+            var name = lecturer_name_et?.text.toString().trim()
+            var position = position_name_et?.text.toString().trim()
+            var department = department_et?.text.toString().trim()
+            var email = selectedUser?.email
+
+            if (id != "" && name != "" && email != null && position != "" && department != "") {
+                var lecturer =
+                    Lecturer(
+                        id,
+                        name,
+                        email,
+                        position,
+                        department,
+                        profileImageURL != null
+                    )
+                Log.d("Lecturer", "$lecturer")
+                hideKeyboard()
+                clearInputs()
+                if(!(lecturers.any { email == it.email })) {
+                    writeLecturer(lecturer)
+                    Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT).show()
+                }else {
+                    Toast.makeText(this, "This user is already a lecturer", Toast.LENGTH_SHORT).show()
+                }
+            }else
+                Toast.makeText(this, "Please fill all fields before insert", Toast.LENGTH_SHORT).show()
+        }
+        image_upload_button?.setOnClickListener {
+            openGallery()
+        }
+        builder.show()
     }
 
 

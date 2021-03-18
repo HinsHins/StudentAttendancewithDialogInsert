@@ -60,6 +60,7 @@ class LecturerRecyclerViewAdaptor(val lecturers: ArrayList<Lecturer>)
             view.lecturer_name_tv.text = lecturer.name
             view.lecturer_position_tv.text = lecturer.position
             view.lecturer_department_tv.text = lecturer.department
+            view.lectuerer_email_tv.text = lecturer.email
 
         }
     }

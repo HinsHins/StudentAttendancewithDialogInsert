@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +15,12 @@ import com.example.firestoreinsetprototype.Constant.FirestoreCollectionPath
 import com.example.firestoreinsetprototype.Extension.hideKeyboard
 import com.example.firestoreinsetprototype.Model.Model
 import com.example.firestoreinsetprototype.Model.Programme
+import com.example.firestoreinsetprototype.Model.Student
 import com.example.firestoreinsetprototype.Util.realTimeUpdate
 import com.example.firestoreinsetprototype.Util.retrieveData
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_programme.*
+import kotlinx.android.synthetic.main.programme_dialog_layout.*
 
 class ProgrammeActivity : AppCompatActivity() {
 
@@ -52,29 +56,29 @@ class ProgrammeActivity : AppCompatActivity() {
 //        }
 
         programme_insert.setOnClickListener {
-            var id = programme_id_et.text.toString().trim()
-            var name = programme_name_et.text.toString().trim()
-
-            if (id != "" && name != "" ) {
-                var programme =
-                    Programme(
-                        id,
-                        name
-                    )
-                Log.d("Programme", "$programme")
-                hideKeyboard()
-                clearInputs()
-                writeProgramme(programme)
-                Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT)
-                    .show()
-            } else
-                Toast.makeText(
-                    this,
-                    "Please fill all fields before insert",
-                    Toast.LENGTH_SHORT
-                ).show()
+            programmeInputDialog(it)
+//            var id = programme_id_et.text.toString().trim()
+//            var name = programme_name_et.text.toString().trim()
+//
+//            if (id != "" && name != "" ) {
+//                var programme =
+//                    Programme(
+//                        id,
+//                        name
+//                    )
+//                Log.d("Programme", "$programme")
+//                hideKeyboard()
+//                clearInputs()
+//                writeProgramme(programme)
+//                Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT)
+//                    .show()
+//            } else
+//                Toast.makeText(
+//                    this,
+//                    "Please fill all fields before insert",
+//                    Toast.LENGTH_SHORT
+//                ).show()
         }
-
         retrieveProgramme()
     }
 
@@ -85,8 +89,8 @@ class ProgrammeActivity : AppCompatActivity() {
     }
 
     private fun clearInputs(){
-        programme_id_et.text.clear()
-        programme_name_et.text.clear()
+//        programme_id_et.text.clear()
+//        programme_name_et.text.clear()
     }
 
     private fun retrieveProgramme() {
@@ -135,6 +139,45 @@ class ProgrammeActivity : AppCompatActivity() {
             .addOnFailureListener {e->
                 Log.w("", "Error deleting document", e)
             }
+    }
+
+    fun programmeInputDialog(view: View) {
+        val builder = android.app.AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        builder.setTitle("Create New Programme")
+        val dialogLayout = inflater.inflate(R.layout.programme_dialog_layout, null)
+        val programme_id_et  = dialogLayout.findViewById<EditText>(R.id.programme_id_et)
+        val programme_name_et  = dialogLayout.findViewById<EditText>(R.id.programme_name_et)
+
+        builder.setView(dialogLayout)
+        builder.setPositiveButton("Cancel") {dialog, whichButton ->
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Insert") { dialogInterface, i ->
+            var id = programme_id_et.text.toString().trim()
+            var name = programme_name_et.text.toString().trim()
+
+            if (id != "" && name != "") {
+                var programme =
+                    Programme(
+                        id,
+                        name
+                    )
+                Log.d("Programme", "$programme")
+                hideKeyboard()
+                clearInputs()
+                writeProgramme(programme)
+                Toast.makeText(this, "Insert successful", Toast.LENGTH_SHORT)
+                    .show()
+            } else
+                Toast.makeText(
+                    this,
+                    "Please fill all fields before insert",
+                    Toast.LENGTH_SHORT
+                ).show()
+        }
+        builder.show()
     }
 
 }
